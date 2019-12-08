@@ -72,13 +72,13 @@ export const calculateProgram = (program, input, output) => {
       case OpCodeLessThan:
         operandA = getOperand(program, ip, instruction, 1);
         operandB = getOperand(program, ip, instruction, 2);
-        resultIndex = getOperand(program, ip, instruction, 3);
+        resultIndex = program[ip + 3];
         program[resultIndex] = operandA < operandB ? 1 : 0;
         break;
       case OpCodeEquals:
         operandA = getOperand(program, ip, instruction, 1);
         operandB = getOperand(program, ip, instruction, 2);
-        resultIndex = getOperand(program, ip, instruction, 3);
+        resultIndex = program[ip + 3];
         program[resultIndex] = operandA === operandB ? 1 : 0;
         break;
       case OpCodeExit:

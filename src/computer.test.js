@@ -168,3 +168,108 @@ describe("equals", () => {
     expect(result).toEqual([0, 6, 5, 0, 99]);
   });
 });
+
+it("should work for given program 3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9 and input gt 0", () => {
+  const program = [3, 12, 6, 12, 15, 1, 13, 14, 13, 4, 13, 99, -1, 0, 1, 9];
+  const output = [];
+  calculateProgram(program, 42, output);
+  expect(output).toContain(1);
+  expect(output).toHaveLength(1);
+});
+
+it("should work for given program 3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9 and input 0", () => {
+  const program = [3, 12, 6, 12, 15, 1, 13, 14, 13, 4, 13, 99, -1, 0, 1, 9];
+  const output = [];
+  calculateProgram(program, 0, output);
+  expect(output).toContain(0);
+  expect(output).toHaveLength(1);
+});
+
+it("should work for given program 3,3,1105,-1,9,1101,0,0,12,4,12,99,1 and input gt 0", () => {
+  const program = [3, 3, 1105, -1, 9, 1101, 0, 0, 12, 4, 12, 99, 1];
+  const output = [];
+  calculateProgram(program, 42, output);
+  expect(output).toContain(1);
+  expect(output).toHaveLength(1);
+});
+
+it("should work for given program 3,3,1105,-1,9,1101,0,0,12,4,12,99,1 and input 0", () => {
+  const program = [3, 3, 1105, -1, 9, 1101, 0, 0, 12, 4, 12, 99, 1];
+  const output = [];
+  calculateProgram(program, 0, output);
+  expect(output).toContain(0);
+  expect(output).toHaveLength(1);
+});
+
+describe("program test day part 2", () => {
+  let program;
+  let output;
+
+  beforeEach(() => {
+    program = [
+      3,
+      21,
+      1008,
+      21,
+      8,
+      20,
+      1005,
+      20,
+      22,
+      107,
+      8,
+      21,
+      20,
+      1006,
+      20,
+      31,
+      1106,
+      0,
+      36,
+      98,
+      0,
+      0,
+      1002,
+      21,
+      125,
+      20,
+      4,
+      20,
+      1105,
+      1,
+      46,
+      104,
+      999,
+      1105,
+      1,
+      46,
+      1101,
+      1000,
+      1,
+      20,
+      4,
+      20,
+      1105,
+      1,
+      46,
+      98,
+      99
+    ];
+    output = [];
+  });
+
+  it("should output 999 if input is lt 8", () => {
+    calculateProgram(program, 7, output);
+    expect(output).toContain(999);
+  });
+
+  it("should output 1000 if input is eq 8", () => {
+    calculateProgram(program, 8, output);
+    expect(output).toContain(1000);
+  });
+
+  it("should output 1001 if input is gt 8", () => {
+    calculateProgram(program, 9, output);
+    expect(output).toContain(1001);
+  });
+});
