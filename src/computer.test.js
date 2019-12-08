@@ -1,4 +1,4 @@
-import { calculateProgram } from "./computer";
+import { calculateProgram, getOpCode, getParamMode } from "./computer";
 
 describe("intcode computer", () => {
   it("should work for input [1,0,0,0,99]", () => {
@@ -55,5 +55,45 @@ describe("intcode computer", () => {
     const result = calculateProgram(program, null, output);
 
     expect(output).toContain(expected);
+  });
+});
+
+describe("getOpCode", () => {
+  it("should return 1 digit opcode", () => {
+    const instruction = 1;
+    const result = getOpCode(instruction);
+    expect(result).toBe(1);
+  });
+
+  it("should return 2 digit opcode", () => {
+    const instruction = 99;
+    const result = getOpCode(instruction);
+    expect(result).toBe(99);
+  });
+
+  it("should return 2 digit opcode from longer instruction", () => {
+    const instruction = 199;
+    const result = getOpCode(instruction);
+    expect(result).toBe(99);
+  });
+});
+
+describe("getParamMode", () => {
+  it("should return param mode when it's given", () => {
+    const instruction = 199;
+    const result = getParamMode(instruction, 1);
+    expect(result).toBe(1);
+  });
+
+  it("should return param mode when it's given - second", () => {
+    const instruction = 1099;
+    const result = getParamMode(instruction, 2);
+    expect(result).toBe(1);
+  });
+
+  it("should return 0 when it's missing", () => {
+    const instruction = 199;
+    const result = getParamMode(instruction, 3);
+    expect(result).toBe(0);
   });
 });

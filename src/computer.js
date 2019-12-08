@@ -9,6 +9,9 @@ stepCounts.set(OpCodeSaveInput, 2);
 const OpCodeOutputValue = 4;
 stepCounts.set(OpCodeOutputValue, 2);
 
+const ParamModePosition = 0;
+const ParamModeImmediate = 1;
+
 export const calculateProgram = (program, input, output) => {
   let ip = 0;
   let running = true;
@@ -46,4 +49,23 @@ export const calculateProgram = (program, input, output) => {
     ip += stepCounts.get(opCode);
   }
   return program;
+};
+
+export const getOpCode = instruction => {
+  if (instruction < 100) {
+    return instruction;
+  }
+  const stringValue = instruction.toString();
+  const l = stringValue.length;
+  return parseInt(stringValue[l - 2] + stringValue[l - 1]);
+};
+
+export const getParamMode = (instruction, index) => {
+  const stringValue = instruction.toString();
+  const l = stringValue.length;
+  const offsetIndex = index + 2;
+  if (offsetIndex > l) {
+    return 0;
+  }
+  return parseInt(stringValue[l - offsetIndex]);
 };
