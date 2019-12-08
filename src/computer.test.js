@@ -123,3 +123,20 @@ describe("jump-if-true", () => {
     expect(output).toContain(1);
   });
 });
+
+describe("jump-if-false", () => {
+  it("should set the ip to second param when first param is zero", () => {
+    const program = [1106, 0, 5, 4, 1, 99];
+    const output = [];
+    calculateProgram(program, null, output);
+    expect(output).toHaveLength(0);
+  });
+
+  it("should do nothing when first param is non zero", () => {
+    const program = [1106, 42, 5, 104, 1, 99];
+    const output = [];
+    calculateProgram(program, null, output);
+    expect(output).toHaveLength(1);
+    expect(output).toContain(1);
+  });
+});

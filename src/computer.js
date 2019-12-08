@@ -12,6 +12,9 @@ stepCounts.set(OpCodeOutputValue, 2);
 const OpCodeJumpIfTrue = 5;
 stepCounts.set(OpCodeJumpIfTrue, 3);
 
+const OpCodeJumpIfFalse = 6;
+stepCounts.set(OpCodeJumpIfFalse, 3);
+
 const ParamModePosition = 0;
 const ParamModeImmediate = 1;
 
@@ -48,6 +51,14 @@ export const calculateProgram = (program, input, output) => {
         operandA = getOperand(program, ip, instruction, 1);
         operandB = getOperand(program, ip, instruction, 2);
         if (operandA !== 0) {
+          ip = operandB;
+          skipStep = true;
+        }
+        break;
+      case OpCodeJumpIfFalse:
+        operandA = getOperand(program, ip, instruction, 1);
+        operandB = getOperand(program, ip, instruction, 2);
+        if (operandA === 0) {
           ip = operandB;
           skipStep = true;
         }
