@@ -37,8 +37,8 @@ export const calculateProgram = (program, input, output) => {
         program[resultIndex] = input;
         break;
       case OpCodeOutputValue:
-        resultIndex = program[ip + 1];
-        output.push(program[resultIndex]);
+        operandA = getOperand(program, ip, instruction, 1);
+        output.push(operandA);
         break;
       case OpCodeExit:
         running = false;
