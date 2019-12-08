@@ -154,3 +154,17 @@ describe("less-than", () => {
     expect(result).toEqual([0, 5, 5, 0, 99]);
   });
 });
+
+describe("equals", () => {
+  it("should store 1 in third param position if first param is equal to the 2nd", () => {
+    const program = [11108, 5, 5, 0, 99];
+    const result = calculateProgram(program);
+    expect(result).toEqual([1, 5, 5, 0, 99]);
+  });
+
+  it("should store 0 in third param position if first param is not equal to the 2nd", () => {
+    const program = [11108, 6, 5, 0, 99];
+    const result = calculateProgram(program);
+    expect(result).toEqual([0, 6, 5, 0, 99]);
+  });
+});
