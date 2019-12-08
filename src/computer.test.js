@@ -140,3 +140,17 @@ describe("jump-if-false", () => {
     expect(output).toContain(1);
   });
 });
+
+describe("less-than", () => {
+  it("should store 1 in third param position if first param is less than 2nd", () => {
+    const program = [11107, 4, 5, 0, 99];
+    const result = calculateProgram(program);
+    expect(result).toEqual([1, 4, 5, 0, 99]);
+  });
+
+  it("should store 0 in third param position if first param is not less than 2nd", () => {
+    const program = [11107, 5, 5, 0, 99];
+    const result = calculateProgram(program);
+    expect(result).toEqual([0, 5, 5, 0, 99]);
+  });
+});
