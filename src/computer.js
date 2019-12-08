@@ -6,10 +6,10 @@ stepCounts.set(OpCodeMultiply, 4);
 const OpCodeExit = 99;
 const OpCodeSaveInput = 3;
 stepCounts.set(OpCodeSaveInput, 2);
-const OpCodePrintValue = 4;
-stepCounts.set(OpCodePrintValue, 2);
+const OpCodeOutputValue = 4;
+stepCounts.set(OpCodeOutputValue, 2);
 
-export const calculateProgram = program => {
+export const calculateProgram = (program, input, output) => {
   let ip = 0;
   let running = true;
   let operandAIndex, operandBIndex, resultIndex;
@@ -28,6 +28,14 @@ export const calculateProgram = program => {
         operandBIndex = program[ip + 2];
         resultIndex = program[ip + 3];
         program[resultIndex] = program[operandAIndex] * program[operandBIndex];
+        break;
+      case OpCodeSaveInput:
+        resultIndex = program[ip + 1];
+        program[resultIndex] = input;
+        break;
+      case OpCodeOutputValue:
+        resultIndex = program[ip + 1];
+        output.push(program[resultIndex]);
         break;
       case OpCodeExit:
         running = false;
