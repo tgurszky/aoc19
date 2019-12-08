@@ -1,3 +1,5 @@
+import { calculateProgram } from "./computer";
+
 const puzzleInput = [
   1,
   0,
@@ -153,32 +155,6 @@ const puzzleInput = [
   14,
   0
 ];
-
-const OpCodeAdd = 1;
-const OpCodeMultiply = 2;
-const OpCodeExit = 99;
-
-export const calculateProgram = input => {
-  for (let i = 0; i < input.length; i += 4) {
-    const opCode = input[i];
-    const operandAIndex = input[i + 1];
-    const operandBIndex = input[i + 2];
-    const resultIndex = input[i + 3];
-
-    switch (opCode) {
-      case OpCodeAdd:
-        input[resultIndex] = input[operandAIndex] + input[operandBIndex];
-        break;
-      case OpCodeMultiply:
-        input[resultIndex] = input[operandAIndex] * input[operandBIndex];
-        break;
-      case OpCodeExit:
-        return input;
-      default:
-        throw new Error(`Opcode '${opCode}' is not valid`);
-    }
-  }
-};
 
 const puzzleInputCopy = puzzleInput.slice();
 puzzleInputCopy[1] = 12;

@@ -1,6 +1,6 @@
-import { calculateProgram } from "./day2";
+import { calculateProgram } from "./computer";
 
-describe("day2", () => {
+describe("intcode computer", () => {
   it("should work for input [1,0,0,0,99]", () => {
     const input = [1, 0, 0, 0, 99];
     const expected = [2, 0, 0, 0, 99];
