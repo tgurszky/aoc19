@@ -9,6 +9,9 @@ stepCounts.set(OpCodeSaveInput, 2);
 const OpCodeOutputValue = 4;
 stepCounts.set(OpCodeOutputValue, 2);
 
+const OpCodeJumpIfTrue = 5;
+stepCounts.set(OpCodeJumpIfTrue, 3);
+
 const ParamModePosition = 0;
 const ParamModeImmediate = 1;
 
@@ -18,6 +21,7 @@ export const calculateProgram = (program, input, output) => {
   let operandA, operandB, resultIndex;
 
   while (running) {
+    let skipStep = false;
     const instruction = program[ip];
     switch (getOpCode(instruction)) {
       case OpCodeAdd:
@@ -40,13 +44,23 @@ export const calculateProgram = (program, input, output) => {
         operandA = getOperand(program, ip, instruction, 1);
         output.push(operandA);
         break;
+      case OpCodeJumpIfTrue:
+        operandA = getOperand(program, ip, instruction, 1);
+        operandB = getOperand(program, ip, instruction, 2);
+        if (operandA !== 0) {
+          ip = operandB;
+          skipStep = true;
+        }
+        break;
       case OpCodeExit:
         running = false;
         break;
       default:
         throw new Error(`Opcode '${instruction}' is not valid`);
     }
-    ip += stepCounts.get(getOpCode(instruction));
+    if (!skipStep) {
+      ip += stepCounts.get(getOpCode(instruction));
+    }
   }
   return program;
 };

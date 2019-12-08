@@ -106,3 +106,20 @@ describe("getParamMode", () => {
     expect(result).toBe(0);
   });
 });
+
+describe("jump-if-true", () => {
+  it("should set the ip to second param when first param is non zero", () => {
+    const program = [1105, 42, 5, 4, 1, 99];
+    const output = [];
+    calculateProgram(program, null, output);
+    expect(output).toHaveLength(0);
+  });
+
+  it("should do nothing when first param is 0", () => {
+    const program = [1105, 0, 5, 104, 1, 99];
+    const output = [];
+    calculateProgram(program, null, output);
+    expect(output).toHaveLength(1);
+    expect(output).toContain(1);
+  });
+});
