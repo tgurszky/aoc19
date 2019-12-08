@@ -37,6 +37,15 @@ describe("intcode computer", () => {
     expect(result).toEqual(expected);
   });
 
+  it("should work for input [1101,100,-1,4,0]", () => {
+    const program = [1101, 100, -1, 4, 0];
+    const expected = [1101, 100, -1, 4, 99];
+
+    const result = calculateProgram(program);
+
+    expect(result).toEqual(expected);
+  });
+
   it("should save input with opcode 3", () => {
     const program = [3, 0, 99];
     const input = 5;

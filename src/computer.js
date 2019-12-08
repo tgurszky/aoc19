@@ -15,22 +15,22 @@ const ParamModeImmediate = 1;
 export const calculateProgram = (program, input, output) => {
   let ip = 0;
   let running = true;
-  let operandAIndex, operandBIndex, resultIndex;
+  let operandA, operandB, resultIndex;
 
   while (running) {
-    const opCode = program[ip];
-    switch (opCode) {
+    const instruction = program[ip];
+    switch (getOpCode(instruction)) {
       case OpCodeAdd:
-        operandAIndex = program[ip + 1];
-        operandBIndex = program[ip + 2];
+        operandA = getOperand(program, ip, instruction, 1);
+        operandB = getOperand(program, ip, instruction, 2);
         resultIndex = program[ip + 3];
-        program[resultIndex] = program[operandAIndex] + program[operandBIndex];
+        program[resultIndex] = operandA + operandB;
         break;
       case OpCodeMultiply:
-        operandAIndex = program[ip + 1];
-        operandBIndex = program[ip + 2];
+        operandA = getOperand(program, ip, instruction, 1);
+        operandB = getOperand(program, ip, instruction, 2);
         resultIndex = program[ip + 3];
-        program[resultIndex] = program[operandAIndex] * program[operandBIndex];
+        program[resultIndex] = operandA * operandB;
         break;
       case OpCodeSaveInput:
         resultIndex = program[ip + 1];
@@ -44,9 +44,9 @@ export const calculateProgram = (program, input, output) => {
         running = false;
         break;
       default:
-        throw new Error(`Opcode '${opCode}' is not valid`);
+        throw new Error(`Opcode '${instruction}' is not valid`);
     }
-    ip += stepCounts.get(opCode);
+    ip += stepCounts.get(getOpCode(instruction));
   }
   return program;
 };
@@ -68,4 +68,14 @@ export const getParamMode = (instruction, index) => {
     return 0;
   }
   return parseInt(stringValue[l - offsetIndex]);
+};
+
+const getOperand = (program, ip, instruction, index) => {
+  switch (getParamMode(instruction, index)) {
+    case ParamModePosition:
+      const operandAIndex = program[ip + index];
+      return program[operandAIndex];
+    case ParamModeImmediate:
+      return program[ip + index];
+  }
 };
