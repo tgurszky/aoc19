@@ -1,4 +1,4 @@
-import { findInMap, addMapEntry, getDepth, applyToNodes } from "./day6";
+import { findInMap, applyToNodes, addListEntry, createMap, getSolution } from "./day6";
 
 describe("findInMap", () => {
   let map;
@@ -43,51 +43,6 @@ describe("findInMap", () => {
   });
 });
 
-it("addMapEntry should build a map", () => {
-  const map = {};
-  const entry1 = "COM)B";
-  const entry2 = "B)C";
-  const entry3 = "B)D";
-  addMapEntry(map, entry1);
-  addMapEntry(map, entry2);
-  addMapEntry(map, entry3);
-  expect(map.name).toBe("COM");
-  expect(map.children).toHaveLength(1);
-  expect(map.children[0].children).toHaveLength(2);
-});
-
-describe("getDepth", () => {
-  let map;
-  beforeAll(() => {
-    map = {
-      name: "A",
-      children: [
-        {
-          name: "B",
-          children: [
-            {
-              name: "C"
-            }
-          ]
-        }
-      ]
-    };
-  });
-
-  it("should return 0 for root", () => {
-    const result = getDepth(map, "A");
-    expect(result).toBe(0);
-  });
-  it("should return 1 for child", () => {
-    const result = getDepth(map, "B");
-    expect(result).toBe(1);
-  });
-  it("should return 2 for second child", () => {
-    const result = getDepth(map, "C");
-    expect(result).toBe(2);
-  });
-});
-
 it("applyToNodes should apply function to all nodes in subtree", () => {
   const map = {
     name: "A",
@@ -110,4 +65,46 @@ it("applyToNodes should apply function to all nodes in subtree", () => {
   expect(names).toContain("A");
   expect(names).toContain("B");
   expect(names).toContain("C");
+});
+
+describe("addListEntry", () => {
+  it("should create a list", () => {
+    const list = [];
+    addListEntry("G)H", list);
+    addListEntry("B)G", list);
+    addListEntry("COM)B", list);
+    expect(list).toHaveLength(3);
+  });
+});
+
+it("createMap should create a map from a list", () => {
+  const list = [
+    { parent: "G", name: "H" },
+    { parent: "B", name: "G" },
+    { parent: "COM", name: "B" },
+    { parent: "B", name: "C" }
+  ];
+  const map = createMap(list);
+  expect(map.name).toBe("COM");
+  expect(map.children[0].name).toBe("B");
+  expect(map.children[0].children).toHaveLength(2);
+});
+
+it("getSolution should return 42 for test input", () => {
+  const list = [
+    { parent: "COM", name: "B" },
+    { parent: "B", name: "G" },
+    { parent: "G", name: "H" },
+    { parent: "B", name: "C" },
+    { parent: "C", name: "D" },
+    { parent: "D", name: "I" },
+    { parent: "D", name: "E" },
+    { parent: "E", name: "F" },
+    { parent: "E", name: "J" },
+    { parent: "J", name: "K" },
+    { parent: "K", name: "L" }
+  ];
+  const map = createMap(list);
+  const result = getSolution(map);
+  expect(result).toBe(42);
 });

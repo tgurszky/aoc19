@@ -1,16 +1,20 @@
-export const addMapEntry = (map, entry) => {
+export const addListEntry = (entry, list) => {
   const [center, orbit] = entry.split(")");
-  const newChild = {
-    name: orbit,
-    children: []
+  list.push({ parent: center, name: orbit });
+};
+
+export const createMap = list => {
+  let hashMap = {
+    COM: { name: "COM", children: [] }
   };
-  const result = findInMap(map, center);
-  if (result) {
-    result.children.push(newChild);
-  } else {
-    map.name = center;
-    map.children = [newChild];
-  }
+  list.forEach(element => {
+    hashMap[element.name] = { ...element, children: [] };
+  });
+  list.forEach(element => {
+    hashMap[element.parent].children.push(hashMap[element.name]);
+    hashMap[element.name].parent = hashMap[element.parent];
+  });
+  return hashMap.COM;
 };
 
 export const findInMap = (node, name) => {
@@ -25,21 +29,27 @@ export const findInMap = (node, name) => {
   }
 };
 
-export const getDepth = (node, name) => {
-  if (node.name === name) {
+export const getDepth = node => {
+  if (!node.parent) {
     return 0;
   }
-  for (let i = 0; i < node.children.length; i++) {
-    return 1 + getDepth(node.children[i], name);
-  }
+  return 1 + getDepth(node.parent);
 };
 
 export const applyToNodes = (node, f) => {
   f(node);
-  if (!node.children || node.children.length === 0) {
+  if (node.children.length === 0) {
     return;
   }
   for (let i = 0; i < node.children.length; i++) {
     applyToNodes(node.children[i], f);
   }
+};
+
+export const getSolution = map => {
+  let depthCount = 0;
+  applyToNodes(map, node => {
+    depthCount += getDepth(node);
+  });
+  return depthCount;
 };
