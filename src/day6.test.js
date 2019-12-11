@@ -1,4 +1,12 @@
-import { findInMap, applyToNodes, addListEntry, createMap, getSolution } from "./day6";
+import {
+  findInMap,
+  applyToNodes,
+  addListEntry,
+  createMap,
+  getSolution,
+  findCommonParent,
+  getSolutionTwo
+} from "./day6";
 
 describe("findInMap", () => {
   let map;
@@ -107,4 +115,44 @@ it("getSolution should return 42 for test input", () => {
   const map = createMap(list);
   const result = getSolution(map);
   expect(result).toBe(42);
+});
+
+it("findCommonParent should find the right node", () => {
+  const list = [
+    { parent: "COM", name: "B" },
+    { parent: "B", name: "G" },
+    { parent: "G", name: "H" },
+    { parent: "B", name: "C" },
+    { parent: "C", name: "D" },
+    { parent: "D", name: "I" },
+    { parent: "D", name: "E" },
+    { parent: "E", name: "F" },
+    { parent: "E", name: "J" },
+    { parent: "J", name: "K" },
+    { parent: "K", name: "L" }
+  ];
+  const map = createMap(list);
+  const K = findInMap(map, "K");
+  const result = findCommonParent(K, "I");
+  expect(result.name).toBe("D");
+});
+
+it("test for part2", () => {
+  const list = [];
+  addListEntry("COM)B", list);
+  addListEntry("B)C", list);
+  addListEntry("C)D", list);
+  addListEntry("D)E", list);
+  addListEntry("E)F", list);
+  addListEntry("B)G", list);
+  addListEntry("G)H", list);
+  addListEntry("D)I", list);
+  addListEntry("E)J", list);
+  addListEntry("J)K", list);
+  addListEntry("K)L", list);
+  addListEntry("K)YOU", list);
+  addListEntry("I)SAN", list);
+  const map = createMap(list);
+  const result = getSolutionTwo(map);
+  expect(result).toBe(4);
 });

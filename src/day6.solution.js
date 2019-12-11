@@ -1,7 +1,7 @@
 import { createInterface } from "readline";
 import { createReadStream } from "fs";
 import { resolve } from "path";
-import { addListEntry, getSolution, createMap } from "./day6";
+import { addListEntry, getSolution, createMap, getSolutionTwo } from "./day6";
 
 const rl = createInterface({
   input: createReadStream(resolve(__dirname, "../inputs/day6.txt"))
@@ -15,6 +15,6 @@ rl.on("line", line => {
 
 rl.on("close", () => {
   const map = createMap(list);
-  const result = getSolution(map);
-  console.log(`part 1 result is ${result}`);
+  console.log(`part 1 result is ${getSolution(map)}`);
+  console.log(`part 2 result is ${getSolutionTwo(map)}`);
 });

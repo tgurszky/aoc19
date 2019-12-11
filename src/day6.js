@@ -25,7 +25,10 @@ export const findInMap = (node, name) => {
     return null;
   }
   for (let i = 0; i < node.children.length; i++) {
-    return findInMap(node.children[i], name);
+    const child = findInMap(node.children[i], name);
+    if (child) {
+      return child;
+    }
   }
 };
 
@@ -34,6 +37,13 @@ export const getDepth = node => {
     return 0;
   }
   return 1 + getDepth(node.parent);
+};
+
+export const getDepthTo = (node, target) => {
+  if (!node.parent || node.parent.name === target) {
+    return 0;
+  }
+  return 1 + getDepthTo(node.parent, target);
 };
 
 export const applyToNodes = (node, f) => {
@@ -52,4 +62,22 @@ export const getSolution = map => {
     depthCount += getDepth(node);
   });
   return depthCount;
+};
+
+export const getSolutionTwo = map => {
+  const me = findInMap(map, "YOU");
+  let commonParent = findCommonParent(me, "SAN");
+  if (commonParent) {
+    const santa = findInMap(commonParent, "SAN");
+    return getDepthTo(me, commonParent.name) + getDepthTo(santa, commonParent.name);
+  } else {
+    return -1;
+  }
+};
+
+export const findCommonParent = (source, target) => {
+  if (findInMap(source.parent, target)) {
+    return source.parent;
+  }
+  return findCommonParent(source.parent, target);
 };
