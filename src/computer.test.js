@@ -273,3 +273,10 @@ describe("program test day part 2", () => {
     expect(output).toContain(1001);
   });
 });
+
+it("should handle multiple input values", () => {
+  const program = [3, 0, 3, 1, 99];
+  const input = [5, 6];
+  const result = calculateProgram(program, input);
+  expect(result).toEqual([5, 6, 3, 1, 99]);
+});

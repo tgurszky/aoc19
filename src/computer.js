@@ -47,7 +47,7 @@ export const calculateProgram = (program, input, output) => {
         break;
       case OpCodeSaveInput:
         resultIndex = program[ip + 1];
-        program[resultIndex] = input;
+        program[resultIndex] = Array.isArray(input) ? input.shift() : input;
         break;
       case OpCodeOutputValue:
         operandA = getOperand(program, ip, instruction, 1);
