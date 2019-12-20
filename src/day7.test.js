@@ -1,4 +1,9 @@
-import { amplifier, createAmplifierChain, generatePermutations } from "./day7";
+import {
+  amplifier,
+  createAmplifierChain,
+  generatePermutations,
+  createLoopbackAmplifierChain
+} from "./day7";
 
 describe("amplifier", () => {
   let program, phase, input, output;
@@ -44,4 +49,41 @@ describe("generatePermutations", () => {
     expect(result).toContainEqual([2, 0, 1]);
     expect(result).toContainEqual([2, 1, 0]);
   });
+});
+
+it("should work for test case 1 of part 2", () => {
+  const program = [
+    3,
+    26,
+    1001,
+    26,
+    -4,
+    26,
+    3,
+    27,
+    1002,
+    27,
+    2,
+    27,
+    1,
+    27,
+    26,
+    27,
+    4,
+    27,
+    1001,
+    28,
+    -1,
+    28,
+    1005,
+    28,
+    6,
+    99,
+    0,
+    0,
+    5
+  ];
+  const phases = [9, 8, 7, 6, 5];
+  const result = createLoopbackAmplifierChain(program, phases);
+  expect(result).toBe(139629729);
 });

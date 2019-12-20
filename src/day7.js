@@ -14,6 +14,10 @@ export const createAmplifierChain = (program, phases) => {
   );
 };
 
+export const createLoopbackAmplifierChain = (program, phases) => {
+  return 0;
+};
+
 export const generatePermutations = from => {
   if (from.length === 0) return [];
   if (from.length === 1) return [from];
