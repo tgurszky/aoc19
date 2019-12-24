@@ -280,3 +280,13 @@ it("should handle multiple input values", () => {
   const result = calculateProgram(program, input);
   expect(result).toEqual([5, 6, 3, 1, 99]);
 });
+
+describe("relative mode", () => {
+  it("should start using 0 as the default relative base", () => {
+    const program = [204, 3, 99, 42];
+    const output = [];
+    calculateProgram(program, [], output);
+    expect(output).toHaveLength(1);
+    expect(output).toContainEqual(42);
+  });
+});
