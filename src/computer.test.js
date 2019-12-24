@@ -289,4 +289,12 @@ describe("relative mode", () => {
     expect(output).toHaveLength(1);
     expect(output).toContainEqual(42);
   });
+
+  it("should modify the relative base with opcode 9", () => {
+    const program = [109, 1, 204, -1, 99];
+    const output = [];
+    calculateProgram(program, [], output);
+    expect(output).toHaveLength(1);
+    expect(output).toContainEqual(109);
+  });
 });

@@ -21,6 +21,9 @@ stepCounts.set(OpCodeLessThan, 4);
 const OpCodeEquals = 8;
 stepCounts.set(OpCodeEquals, 4);
 
+const OpCodeSetRelativeBase = 9;
+stepCounts.set(OpCodeSetRelativeBase, 2);
+
 const ParamModePosition = 0;
 const ParamModeImmediate = 1;
 const ParamModeRelative = 2;
@@ -82,6 +85,10 @@ export const calculateProgram = (program, input, output) => {
         operandB = getOperand(program, ip, instruction, 2, relativeBase);
         resultIndex = program[ip + 3];
         program[resultIndex] = operandA === operandB ? 1 : 0;
+        break;
+      case OpCodeSetRelativeBase:
+        operandA = getOperand(program, ip, instruction, 1, relativeBase);
+        relativeBase += operandA;
         break;
       case OpCodeExit:
         running = false;
