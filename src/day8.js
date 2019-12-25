@@ -1,4 +1,4 @@
-import { curry, slice } from "ramda";
+import { curry, slice, concat } from "ramda";
 
 export const createLayers = curry((width, height, input) => {
   const result = [];
@@ -34,3 +34,41 @@ export const findFewestDigitsLayer = curry(
       { count: Infinity, value: [] }
     ).value
 );
+
+const Black = 0;
+const White = 1;
+const Transparent = 2;
+
+export const createEmptyImage = (width, height) => {
+  const image = [];
+  for (let h = 0; h < height; h++) {
+    image.push(createEmptyRow(width));
+  }
+  return image;
+};
+
+const createEmptyRow = width => Array.from({ length: width }, (_, i) => Transparent);
+
+export const getImage = (width, height, layers) => {
+  const initialImage = createEmptyImage(width, height);
+  return layers.reduce((image, layer) => {
+    for (let h = 0; h < height; h++) {
+      for (let w = 0; w < width; w++) {
+        if (image[h][w] === Transparent) {
+          image[h][w] = layer[h][w];
+        }
+      }
+    }
+    return image;
+  }, initialImage);
+};
+
+export const printImage = image =>
+  image.map(row => {
+    let rowString = "";
+    row.map(pixel => {
+      if (pixel === White) rowString += "#";
+      else rowString += " ";
+    });
+    console.log(rowString);
+  });

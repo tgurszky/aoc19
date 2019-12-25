@@ -1,4 +1,10 @@
-import { findFewestDigitsLayer, createLayers, getNumberOfDigits } from "./day8";
+import {
+  findFewestDigitsLayer,
+  createLayers,
+  getNumberOfDigits,
+  getImage,
+  createEmptyImage
+} from "./day8";
 
 it("getNumberOfDigits should return the number of given digits in a layer", () => {
   const layer = [
@@ -50,5 +56,39 @@ it("createLayers should create multiple layers when the input is large", () => {
       [1, 2, 2],
       [4, 3, 6]
     ]
+  ]);
+});
+
+it("createEmptyImage should create a given size image with transparent values", () => {
+  const result = createEmptyImage(2, 2);
+  expect(result).toEqual([
+    [2, 2],
+    [2, 2]
+  ]);
+});
+
+it("getImage should calculate the final image from the layers", () => {
+  const layers = [
+    [
+      [0, 2],
+      [2, 2]
+    ],
+    [
+      [1, 1],
+      [2, 2]
+    ],
+    [
+      [2, 2],
+      [1, 2]
+    ],
+    [
+      [0, 0],
+      [0, 0]
+    ]
+  ];
+  const result = getImage(2, 2, layers);
+  expect(result).toEqual([
+    [0, 1],
+    [1, 0]
   ]);
 });
