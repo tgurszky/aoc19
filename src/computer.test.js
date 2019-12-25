@@ -299,9 +299,24 @@ describe("relative mode", () => {
   });
 });
 
-it("quine program should output itself", () => {
-  const program = [109, 1, 204, -1, 1001, 100, 1, 100, 1008, 100, 16, 101, 1006, 101, 0, 99];
+it("should handle large memory", () => {
+  const program = [103, 4, 99];
+  const result = calculateProgram(program, 42, []);
+  expect(result).toEqual([103, 4, 99, 0, 42]);
+});
+
+it("should output a 16-digit number", () => {
+  const program = [1102, 34915192, 34915192, 7, 4, 7, 99, 0];
   const output = [];
-  calculateProgram(program.slice(), [], output);
-  expect(output).toEqual(program);
+  calculateProgram(program, [], output);
+  expect(output).toHaveLength(1);
+  expect(output[0].toString()).toHaveLength(16);
+});
+
+it("should handle large numbers", () => {
+  const program = [104, 1125899906842624, 99];
+  const output = [];
+  calculateProgram(program, [], output);
+  expect(output).toHaveLength(1);
+  expect(output[0]).toEqual(1125899906842624);
 });
