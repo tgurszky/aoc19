@@ -2,7 +2,7 @@ import {
   parseInput,
   findStation,
   isBetween,
-  isOnPolarLine,
+  getAngle,
   getAbsRadialDistance,
   findVaporizedAsteroid,
   getNthVaporizedAsteroid
@@ -109,19 +109,19 @@ describe("isBetween", () => {
   });
 });
 
-describe("isOnPolarLine", () => {
-  it("should work for angles below 180", () => {
+describe("getAngle", () => {
+  it("should work between 0 and 180 deg", () => {
     const check = { x: 2, y: 3 };
     const base = { x: 2, y: 2 };
-    const result = isOnPolarLine(90, base, check);
-    expect(result).toBe(true);
+    const result = getAngle(base, check);
+    expect(result).toBe(90);
   });
 
-  it("should work for angles above 180", () => {
+  it("should work between 180 and 360 deg", () => {
     const check = { x: 2, y: 2 };
     const base = { x: 2, y: 3 };
-    const result = isOnPolarLine(270, base, check);
-    expect(result).toBe(true);
+    const result = getAngle(base, check);
+    expect(result).toBe(270);
   });
 });
 
@@ -143,15 +143,15 @@ describe("getAbsRadialDistance", () => {
 
 it("findVaporizedAsteroid should return the closest asteroid on the given angle", () => {
   const base = { x: 1, y: 1 };
-  const cannonDeg = 45;
-  const expected = { x: 2, y: 2 };
+  const cannonDeg = 44;
   const asteroids = [
     { x: 3, y: 3 },
     { x: 5, y: 2 },
     { x: 2, y: 2 }
   ];
   const result = findVaporizedAsteroid(base, cannonDeg, asteroids);
-  expect(result).toEqual(expected);
+  expect(result.x).toBe(2);
+  expect(result.y).toBe(2);
 });
 
 it("getNthVaporizedAsteroid should vaporize asteroids in the rigth order for small test case", () => {
@@ -161,16 +161,15 @@ it("getNthVaporizedAsteroid should vaporize asteroids in the rigth order for sma
   ..#.....#...###..
   ..#.#.....#....##`;
   const asteroids = parseInput(input);
-  console.log("-----------------------------------");
-  const result = getNthVaporizedAsteroid(9, { x: 8, y: 3 }, 270, asteroids);
-  console.log("-----------------------------------");
-  expect(result).toEqual({ x: 15, y: 1 });
+  const result = getNthVaporizedAsteroid(9, { x: 8, y: 3 }, 269, asteroids);
+  expect(result.x).toBe(15);
+  expect(result.y).toBe(1);
 });
 
 describe("getNthVaporizedAsteroid", () => {
   let asteroids;
   const base = { x: 11, y: 13 };
-  const cannonDeg = 270;
+  const cannonDeg = 269;
 
   beforeAll(() => {
     const input = `.#..##.###...#######
@@ -198,16 +197,19 @@ describe("getNthVaporizedAsteroid", () => {
 
   it("should return the first vaporized asteroid for the test input", () => {
     const result = getNthVaporizedAsteroid(1, base, cannonDeg, asteroids);
-    expect(result).toEqual({ x: 11, y: 12 });
+    expect(result.x).toBe(11);
+    expect(result.y).toBe(12);
   });
 
   it("should return the third vaporized asteroid for the test input", () => {
     const result = getNthVaporizedAsteroid(3, base, cannonDeg, asteroids);
-    expect(result).toEqual({ x: 12, y: 2 });
+    expect(result.x).toBe(12);
+    expect(result.y).toBe(2);
   });
 
-  // it("should return the 200th vaporized asteroid for the test input", () => {
-  //   const result = getNthVaporizedAsteroid(200, base, cannonDeg, asteroids);
-  //   expect(result).toEqual({ x: 8, y: 2 });
-  // });
+  it("should return the 200th vaporized asteroid for the test input", () => {
+    const result = getNthVaporizedAsteroid(200, base, cannonDeg, asteroids);
+    expect(result.x).toBe(8);
+    expect(result.y).toBe(2);
+  });
 });

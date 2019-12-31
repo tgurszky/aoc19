@@ -1,4 +1,17 @@
-import { split, trim, curry, any, min, max, filter, reduce, minBy } from "ramda";
+import {
+  map,
+  split,
+  trim,
+  curry,
+  any,
+  min,
+  max,
+  filter,
+  reduce,
+  minBy,
+  compose,
+  takeWhile
+} from "ramda";
 
 export const parseInput = input => {
   const lines = split("\n", input);
@@ -58,15 +71,14 @@ export const isBetween = curry((a1, a2, checking) => {
   }
 });
 
-export const isOnPolarLine = curry((thetaDeg, base, check) => {
+export const getAngle = curry((base, check) => {
   const deltaCheck = {
     x: check.x - base.x,
     y: check.y - base.y
   };
-  const checkRad = Math.atan2(deltaCheck.y, deltaCheck.x);
-  const checkDeg = (checkRad * 180) / Math.PI;
-  const assertDeg = checkDeg < 0 ? thetaDeg - 360 : thetaDeg;
-  return assertDeg === checkDeg;
+  const angle = Math.atan2(deltaCheck.y, deltaCheck.x);
+  const angleDeg = (angle * 180) / Math.PI;
+  return angleDeg < 0 ? 360 + angleDeg : angleDeg;
 });
 
 export const getAbsRadialDistance = curry((base, check) => {
@@ -85,21 +97,45 @@ export const getNthVaporizedAsteroid = (limit, base, cannonDeg, asteroids) => {
   let vaporizedCounter = 0;
   while (filteredAsteroids.length > 0) {
     const vaporizedAsteroid = findVaporizedAsteroid(base, currentCannonDeg, filteredAsteroids);
-    if (vaporizedAsteroid.x !== Infinity) {
-      vaporizedCounter++;
-      console.log(`count: ${vaporizedCounter} - ${JSON.stringify(vaporizedAsteroid)}`);
-      if (limit === vaporizedCounter) {
-        return vaporizedAsteroid;
-      }
-      filteredAsteroids = filter(a => a !== vaporizedAsteroid, filteredAsteroids);
+    vaporizedCounter++;
+    if (limit === vaporizedCounter) {
+      return vaporizedAsteroid;
     }
-    currentCannonDeg = currentCannonDeg === 359 ? 0 : currentCannonDeg + 1;
+    filteredAsteroids = filter(
+      a => !(a.x === vaporizedAsteroid.x && a.y === vaporizedAsteroid.y),
+      filteredAsteroids
+    );
+    currentCannonDeg = getNextCannonDeg(currentCannonDeg, vaporizedAsteroid.delta);
   }
 };
 
+const getNextCannonDeg = (cannonDeg, delta) => {
+  const sum = cannonDeg + delta;
+  return sum > 360 ? sum - 360 : sum;
+};
+
 export const findVaporizedAsteroid = (base, cannonDeg, asteroids) => {
-  const isOnAngle = isOnPolarLine(cannonDeg, base);
-  const asteroidsOnAngle = filter(isOnAngle, asteroids);
+  const getAngleFromBase = getAngle(base);
   const getDistanceFromBase = getAbsRadialDistance(base);
-  return reduce(minBy(getDistanceFromBase), { x: Infinity, y: Infinity }, asteroidsOnAngle);
+  const betweenCannonAnd360 = angle => angle >= cannonDeg && angle < 360;
+  const add360 = angle => angle + 360;
+  const cannonDelta = angle =>
+    betweenCannonAnd360(angle) ? angle - cannonDeg : add360(angle) - cannonDeg;
+  const getDelta = compose(cannonDelta, getAngleFromBase);
+  const asteroidsWithDeltaFromCannon = map(
+    a => ({
+      x: a.x,
+      y: a.y,
+      delta: getDelta(a)
+    }),
+    asteroids
+  );
+  const noNullDeltaAsteroids = filter(a => a.delta !== 0, asteroidsWithDeltaFromCannon);
+  const smallestDelta = reduce(
+    minBy(a => a.delta),
+    { delta: Infinity },
+    noNullDeltaAsteroids
+  ).delta;
+  const smallestDeltaAsteroids = filter(a => a.delta === smallestDelta, noNullDeltaAsteroids);
+  return reduce(minBy(getDistanceFromBase), { x: Infinity, y: Infinity }, smallestDeltaAsteroids);
 };
